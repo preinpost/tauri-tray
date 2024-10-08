@@ -1,5 +1,6 @@
 use tauri::menu::{Menu, MenuItem};
 use tauri::tray::TrayIconBuilder;
+use tauri::ActivationPolicy;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -12,15 +13,15 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .setup(|app| {
+            app.set_activation_policy(ActivationPolicy::Accessory);
 
             use tauri_plugin_notification::NotificationExt;
 
 
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-
             let open_i = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
 
-            let menu = Menu::with_items(app, &[&quit_i, &open_i])?;
+            let menu = Menu::with_items(app, &[&open_i, &quit_i])?;
 
             let tray = TrayIconBuilder::new()
                 .menu(&menu)
