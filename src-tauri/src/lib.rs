@@ -12,7 +12,10 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[&quit_i])?;
+
+            let open_i = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
+
+            let menu = Menu::with_items(app, &[&quit_i, &open_i])?;
 
             let tray = TrayIconBuilder::new()
                 .menu(&menu)
@@ -23,6 +26,19 @@ pub fn run() {
                         println!("quit menu item was clicked");
                         app.exit(0)
                     }
+
+                    "open" => {
+                        println!("open menu item was clicked");
+
+                        let webview_window = tauri::WebviewWindowBuilder::new(
+                            app,
+                            "external", /* the unique window label */
+                            tauri::WebviewUrl::External("https://tauri.app/".parse().unwrap())
+                            )
+                        .build();
+                    }
+                        
+                    
                     _ => {
                         println!("menu item {:?} not handled", event.id);
                     }

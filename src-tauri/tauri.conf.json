@@ -14,7 +14,8 @@
       {
         "title": "minsoo-app",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "visible": false
         
       }
     ],
