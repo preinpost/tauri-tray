@@ -10,7 +10,12 @@ fn greet(name: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_notification::init())
         .setup(|app| {
+
+            use tauri_plugin_notification::NotificationExt;
+
+
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
 
             let open_i = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
@@ -30,15 +35,24 @@ pub fn run() {
                     "open" => {
                         println!("open menu item was clicked");
 
+                        app.notification()
+                            .builder()
+                            .title("Tauri")
+                            .body("Tauri is awesome")
+                            .show()
+                            .unwrap();
+
                         let webview_window = tauri::WebviewWindowBuilder::new(
                             app,
                             "external", /* the unique window label */
                             tauri::WebviewUrl::External("https://tauri.app/".parse().unwrap())
-                            )
+                        )
                         .build();
                     }
-                        
+
+                 
                     
+    
                     _ => {
                         println!("menu item {:?} not handled", event.id);
                     }
